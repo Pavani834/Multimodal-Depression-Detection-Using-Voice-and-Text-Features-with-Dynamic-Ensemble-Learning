@@ -7,24 +7,16 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 from sklearn.metrics import make_scorer, f1_score
 
-# ===============================
-# STEP 1: Load Dataset
-# ===============================
+
 df = pd.read_csv("fusion_final_features.csv")
 
 X = df.drop(columns=["Participant_ID", "PHQ8_Binary"])
 y = df["PHQ8_Binary"]
 
-# ===============================
-# STEP 2: Feature Reduction
-# ===============================
+
 X = X.iloc[:, :100]
 
 print("Using features:", X.shape[1])
-
-# ===============================
-# STEP 3: Model Pipeline
-# ===============================
 pipeline = Pipeline([
     ('scaler', StandardScaler()),
     ('model', LogisticRegression(
@@ -34,9 +26,6 @@ pipeline = Pipeline([
     ))
 ])
 
-# ===============================
-# STEP 4: Cross Validation
-# ===============================
 cv = StratifiedKFold(
     n_splits=5,
     shuffle=True,
@@ -55,9 +44,6 @@ f1_scores = cross_val_score(
     scoring=make_scorer(f1_score)
 )
 
-# ===============================
-# STEP 5: Results
-# ===============================
 print("\n===== FUSION MODEL RESULTS =====")
 print("Accuracy Mean:", np.mean(accuracy_scores))
 print("Accuracy Std :", np.std(accuracy_scores))
